@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
                               child: const Icon(
                                 Icons.person,
                                 color: Colors.white,
-                                size: 30,
+                                size: 24,
                               ),
                             ),
                           ),
