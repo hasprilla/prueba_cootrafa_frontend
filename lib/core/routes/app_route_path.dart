@@ -1,5 +1,6 @@
 enum AppRoute {
-  home(path: '/home');
+  home(path: '/home'),
+  inventary(path: '/inventary');
 
   final String path;
   const AppRoute({required this.path});

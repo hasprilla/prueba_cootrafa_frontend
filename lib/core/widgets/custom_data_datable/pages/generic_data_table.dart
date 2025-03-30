@@ -23,6 +23,7 @@ class GenericDataTable extends StatelessWidget {
   final bool showFilter;
   final bool showClearButton;
   final bool showPagination;
+  final void Function()? onCreate;
 
   const GenericDataTable({
     super.key,
@@ -40,6 +41,7 @@ class GenericDataTable extends StatelessWidget {
     this.showFilter = true,
     this.showClearButton = true,
     this.showPagination = true,
+    this.onCreate,
   });
 
   @override
@@ -79,9 +81,7 @@ class GenericDataTable extends StatelessWidget {
                               onChanged:
                                   (value) =>
                                       cubit.applyFilters(searchQuery: value),
-                              controller: TextEditingController(
-                                text: state.searchQuery,
-                              ),
+
                               decoration: InputDecoration(
                                 // labelText: 'global_search'.tr(),
                                 prefixIcon: const Icon(Icons.search),
@@ -126,7 +126,9 @@ class GenericDataTable extends StatelessWidget {
                                               state.activeFilters[config
                                                           .field] ==
                                                       value
-                                                  ? Colors.blue.withOpacity(0.2)
+                                                  ? Colors.blue.withValues(
+                                                    alpha: 0.2,
+                                                  )
                                                   : Colors.transparent,
                                           borderRadius: BorderRadius.circular(
                                             4,
@@ -192,81 +194,6 @@ class GenericDataTable extends StatelessWidget {
                           );
                         }),
 
-                        // ...state.filterConfigs.map(
-                        //   (config) {
-                        //     return SizedBox(
-                        //       width: 200,
-                        //       child: DropdownButton2<String>(
-                        //         value: state.activeFilters[config.field],
-                        //         onChanged: (String? newValue) {
-                        //           cubit.applyFilters(activeFilters: {
-                        //             ...state.activeFilters,
-                        //             config.field: newValue!
-                        //           });
-                        //         },
-                        //         items: config.options
-                        //             .map<DropdownMenuItem<String>>(
-                        //                 (String value) {
-                        //           return DropdownMenuItem<String>(
-                        //             value: value,
-                        //             child: Container(
-                        //               width: double.infinity,
-                        //               padding: const EdgeInsets.symmetric(
-                        //                   horizontal: 16),
-                        //               alignment: Alignment.centerLeft,
-                        //               decoration: BoxDecoration(
-                        //                 color:
-                        //                     state.activeFilters[config.field] ==
-                        //                             value
-                        //                         ? Colors.blue.withOpacity(0.2)
-                        //                         : Colors.transparent,
-                        //                 borderRadius: BorderRadius.circular(4),
-                        //               ),
-                        //               child: Text(
-                        //                 value,
-                        //                 style: const TextStyle(fontSize: 16),
-                        //               ),
-                        //             ),
-                        //           );
-                        //         }).toList(),
-                        //         buttonStyleData: ButtonStyleData(
-                        //           height: 48,
-                        //           width: 200,
-                        //           padding: const EdgeInsets.symmetric(
-                        //               horizontal: 16),
-                        //           decoration: BoxDecoration(
-                        //             borderRadius: BorderRadius.circular(8),
-                        //             border: Border.all(color: Colors.blue),
-                        //             color: Colors.grey[200],
-                        //           ),
-                        //         ),
-                        //         dropdownStyleData: DropdownStyleData(
-                        //           maxHeight: 300,
-                        //           width: 200,
-                        //           padding: EdgeInsets.zero,
-                        //           decoration: BoxDecoration(
-                        //             borderRadius: BorderRadius.circular(8),
-                        //             color: Colors.white,
-                        //           ),
-                        //           offset: const Offset(
-                        //               0, -10), // Ajuste de posición
-                        //           elevation: 8,
-                        //         ),
-                        //         menuItemStyleData: const MenuItemStyleData(
-                        //           height: 48,
-                        //           padding: EdgeInsets
-                        //               .zero, // El padding ya está en el Container
-                        //         ),
-                        //         iconStyleData: const IconStyleData(
-                        //           icon: Icon(Icons.arrow_drop_down),
-                        //           iconSize: 24,
-                        //           iconEnabledColor: Colors.grey,
-                        //         ),
-                        //         isExpanded: true,
-                        //       ),
-                        //     );
-                        //   },
-                        // ),
                         const SizedBox(width: 10),
                         if (showClearButton)
                           ElevatedButton(
@@ -286,6 +213,24 @@ class GenericDataTable extends StatelessWidget {
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
+
+                        ElevatedButton(
+                          onPressed: onCreate,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 15,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Text(
+                            'Crear nuevo',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ],
                     ),
                   ],

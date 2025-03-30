@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:prueba_cootrafa_frontend/core/injector/injector_conf.dart';
-import 'package:prueba_cootrafa_frontend/core/utils/show_error_dialog.dart';
-import 'package:prueba_cootrafa_frontend/features/home/presentation/bloc/product_bloc.dart';
-import 'package:prueba_cootrafa_frontend/core/routes/app_route_conf.dart';
-import 'package:prueba_cootrafa_frontend/features/home/presentation/widgets/loading_overlay.dart';
+import 'core/injector/injector_conf.dart';
+import 'features/inventary/presentation/bloc/inventary_bloc.dart';
+import 'features/product/presentation/bloc/product_bloc.dart';
+import 'core/routes/app_route_conf.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,6 +17,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => sl<ProductBloc>()..add(GetProductListEvent()),
         ),
+        BlocProvider(
+          create:
+              (context) => sl<InventaryBloc>()..add(GetInventaryListEvent()),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -26,24 +29,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
         routerConfig: router,
-        builder: (context, child) {
-          return BlocListener<ProductBloc, ProductState>(
-            listener: (context, state) {
-              if (state is GetProductListFailureState) {
-                showErrorDialog(context, state.message);
-              }
-            },
-            child: Stack(
-              children: [
-                child!,
-                if (context.select<ProductBloc, bool>(
-                  (bloc) => bloc.state is GetProductListLoadingState,
-                ))
-                  const LoadingOverlay(),
-              ],
-            ),
-          );
-        },
       ),
     );
   }

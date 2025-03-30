@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:prueba_cootrafa_frontend/features/home/presentation/bloc/product_bloc.dart';
+import '../../features/product/presentation/bloc/product_bloc.dart';
 
 void showErrorDialog(BuildContext context, String message) {
     showDialog(

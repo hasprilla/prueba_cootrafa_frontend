@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:prueba_cootrafa_frontend/core/routes/app_route_path.dart';
+import '../routes/app_route_path.dart';
 
 class UiGoError extends StatelessWidget {
   const UiGoError({super.key});
