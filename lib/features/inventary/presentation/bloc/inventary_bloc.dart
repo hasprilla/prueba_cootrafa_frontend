@@ -46,12 +46,12 @@ class InventaryBloc extends Bloc<InventaryEvent, InventaryState> {
     emit(CreateInventaryLoadingState());
 
     final result = await createInventary(
-      CreateInventaryParams(id: event.id, name: event.name),
+      CreateInventaryParams(name: event.name),
     );
 
-    result.fold(
-      (l) => emit(CreateInventaryFailureState(mapFailureToMessage(l))),
-      (r) {
+    await result.fold(
+      (l) async => emit(CreateInventaryFailureState(mapFailureToMessage(l))),
+      (r) async {
         emit(CreateInventarySuccessState());
         add(GetInventaryListEvent());
       },
@@ -77,9 +77,7 @@ class InventaryBloc extends Bloc<InventaryEvent, InventaryState> {
   Future _delete(DeleteInventaryEvent event, Emitter emit) async {
     emit(DeleteInventaryLoadingState());
 
-    final result = await deleteInventary(
-      DeleteInventaryParams(id: event.id),
-    );
+    final result = await deleteInventary(DeleteInventaryParams(id: event.id));
 
     result.fold(
       (l) => emit(DeleteInventaryFailureState(mapFailureToMessage(l))),

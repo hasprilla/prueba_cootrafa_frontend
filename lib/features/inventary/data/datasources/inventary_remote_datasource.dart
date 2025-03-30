@@ -26,8 +26,8 @@ class InventaryRemoteDataSourceImpl implements InventaryRemoteDataSource {
       return List<Map<String, dynamic>>.from(
         response['data'],
       ).map(InventaryModel.fromJson).toList();
-    } catch (e) {
-      logger.e(e);
+    } catch (e, s) {
+      logger.e(s);
       throw ServerException();
     }
   }
@@ -38,7 +38,7 @@ class InventaryRemoteDataSourceImpl implements InventaryRemoteDataSource {
       await apiHelper.execute(
         method: Method.post,
         url: ApiUrl.inventary,
-        data: model.toJson(),
+        data: model.toJson().removeNulls(),
       );
     } catch (e) {
       logger.e(e);
@@ -71,5 +71,12 @@ class InventaryRemoteDataSourceImpl implements InventaryRemoteDataSource {
       logger.e(e);
       throw ServerException();
     }
+  }
+}
+
+extension RemoveNullsFromMap on Map<String, dynamic> {
+  Map<String, dynamic> removeNulls() {
+    removeWhere((key, value) => value == null);
+    return this;
   }
 }

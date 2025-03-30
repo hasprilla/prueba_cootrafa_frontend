@@ -16,11 +16,10 @@ class CreateInventaryUseCase implements UseCase<void, Params> {
 }
 
 class Params extends Equatable {
-  final String id;
   final String name;
 
-  const Params({required this.id, required this.name});
+  const Params({required this.name});
 
   @override
-  List<Object?> get props => [id, name];
+  List<Object?> get props => [name];
 }

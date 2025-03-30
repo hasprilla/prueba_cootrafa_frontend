@@ -2,15 +2,15 @@ import '../../domain/entities/product_entity.dart';
 
 class ProductModel extends ProductEntity {
   const ProductModel({
-    required super.id,
+    super.id,
     required super.inventoryId,
     required super.name,
     required super.barcode,
     required super.price,
     required super.quantity,
-    required super.createdAt,
-    required super.updatedAt,
-    required super.inventario,
+    super.createdAt,
+    super.updatedAt,
+    super.inventario,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +25,23 @@ class ProductModel extends ProductEntity {
       updatedAt: json['updated_at'],
       inventario: InventarioModel.fromJson(json['inventario']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'inventory_id': inventoryId,
+      'name': name,
+      'barcode': barcode,
+      'price': price,
+      'quantity': quantity,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+      'inventario':
+          inventario is InventarioModel
+              ? (inventario as InventarioModel).toJson()
+              : null,
+    };
   }
 }
 
@@ -43,5 +60,14 @@ class InventarioModel extends Inventario {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
+    };
   }
 }

@@ -1,11 +1,18 @@
 import 'package:equatable/equatable.dart';
 
 class InventaryEntity extends Equatable {
-  final String id;
+  final int? id;
   final String name;
+  final String? createdAt;
+  final String? updatedAt;
 
-  const InventaryEntity({required this.id, required this.name});
+  const InventaryEntity({
+    this.id,
+    required this.name,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   @override
-  List<Object?> get props => [id, name];
+  List<Object?> get props => [id, name, createdAt, updatedAt];
 }

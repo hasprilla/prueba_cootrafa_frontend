@@ -11,7 +11,7 @@ class UpdateInventaryUseCase implements UseCase<void, Params> {
 
   @override
   Future<Either<Failure, void>> call(Params params) async {
-    if (params.id == '') {
+    if (params.id == 0) {
       return Left(EmptyFailure());
     }
 
@@ -20,7 +20,7 @@ class UpdateInventaryUseCase implements UseCase<void, Params> {
 }
 
 class Params extends Equatable {
-  final String id;
+  final int id;
   final String name;
 
   const Params({required this.id, required this.name});

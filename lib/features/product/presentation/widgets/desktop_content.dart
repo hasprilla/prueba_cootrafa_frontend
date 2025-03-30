@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/utils/mostrar_dialogo_eliminar.dart';
+import '../../../inventary/presentation/bloc/inventary_bloc.dart';
 import '../../domain/entities/product_entity.dart';
 import '../bloc/product_bloc.dart';
 import 'show_product_dialog.dart';
@@ -45,25 +47,73 @@ class DesktopContent extends StatelessWidget {
                   showClearButton: false,
                   itemsPerPage: 100,
                   frozenFirstColumn: true,
-                  onCreate:
-                      () => showProductDialog(
+                  onCreate: () {
+                    final state = context.read<InventaryBloc>().state;
+                    if (state is GetInventaryListSuccessState) {
+                      showProductDialog(
                         context: context,
                         productJson: null,
-                      ),
-                  onView:
-                      (item) => showProductDialog(
+                        inventoryOptions:
+                            state.data
+                                .map(
+                                  (inventary) => {
+                                    'id': inventary.id.toString(),
+                                    'value': inventary.name,
+                                  },
+                                )
+                                .toList(),
+                      );
+                    }
+                  },
+                  onView: (item) {
+                    final state = context.read<InventaryBloc>().state;
+                    if (state is GetInventaryListSuccessState) {
+                      return showProductDialog(
                         context: context,
                         productJson: item,
-                      ),
-                  onEdit:
-                      (item) => showProductDialog(
+                        inventoryOptions:
+                            state.data
+                                .map(
+                                  (inventary) => {
+                                    'id': inventary.id.toString(),
+                                    'value': inventary.name,
+                                  },
+                                )
+                                .toList(),
+                      );
+                    }
+                  },
+                  onEdit: (item) {
+                    final state = context.read<InventaryBloc>().state;
+                    if (state is GetInventaryListSuccessState) {
+                      return showProductDialog(
                         context: context,
                         productJson: item,
-                      ),
+                        inventoryOptions:
+                            state.data
+                                .map(
+                                  (inventary) => {
+                                    'id': inventary.id.toString(),
+                                    'value': inventary.name,
+                                  },
+                                )
+                                .toList(),
+                      );
+                    }
+                  },
                   onDelete:
-                      (item) => showProductDialog(
+                      (item) => mostrarDialogoEliminar(
                         context: context,
-                        productJson: item,
+                        nombreRegistro: item['name'],
+                        onConfirmar: () {
+                          context.read<ProductBloc>().add(
+                            DeleteProductEvent(id: item['id']),
+                          );
+
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(item['name'])));
+                        },
                       ),
                 ),
               ),

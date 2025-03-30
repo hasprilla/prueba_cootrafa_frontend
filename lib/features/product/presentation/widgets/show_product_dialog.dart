@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/product_bloc.dart';
 
 void showProductDialog({
   required BuildContext context,
   Map<String, dynamic>? productJson,
+  required List<Map<String, dynamic>> inventoryOptions, // Add this parameter
 }) {
   final idController = TextEditingController(text: productJson?['id'] ?? '');
-  final inventoryIdController = TextEditingController(
-    text: productJson?['inventoryId'] ?? '',
-  );
   final nameController = TextEditingController(
     text: productJson?['name'] ?? '',
   );
@@ -21,12 +22,13 @@ void showProductDialog({
     text: productJson?['quantity']?.toString() ?? '',
   );
 
+  String? selectedInventoryId = productJson?['inventoryId']?.toString();
+
   showDialog(
     context: context,
     builder: (context) {
       return Dialog(
         backgroundColor: Colors.white,
-
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
@@ -55,18 +57,31 @@ void showProductDialog({
                     labelText: 'ID',
                     border: OutlineInputBorder(),
                     filled: true,
-                    fillColor: Colors.grey[100],
+                    fillColor: Colors.grey[200],
                   ),
+
                   enabled: false,
                 ),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: inventoryIdController,
+                DropdownButtonFormField<String>(
+                  value: selectedInventoryId,
                   decoration: InputDecoration(
-                    labelText: 'Inventory ID',
+                    labelText: 'Inventorio',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.inventory),
                   ),
+                  items:
+                      inventoryOptions.map((inventory) {
+                        return DropdownMenuItem<String>(
+                          value: inventory['id'].toString(),
+                          child: Text(
+                            inventory['value'] ?? inventory['id'].toString(),
+                          ),
+                        );
+                      }).toList(),
+                  onChanged: (String? newValue) {
+                    selectedInventoryId = newValue;
+                  },
                 ),
                 const SizedBox(height: 12),
                 TextField(
@@ -129,20 +144,40 @@ void showProductDialog({
                     const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
+                        if (selectedInventoryId == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Seleccione un Inventory ID'),
+                            ),
+                          );
+                          return;
+                        }
+
                         if (productJson?['id'] == null) {
-                          final updatedProduct = {
-                            'id': idController.text,
-                            'inventoryId': inventoryIdController.text,
-                            'name': nameController.text,
-                            'barcode': barcodeController.text,
-                            'price':
-                                double.tryParse(priceController.text) ?? 0.0,
-                            'quantity':
-                                int.tryParse(quantityController.text) ?? 0,
-                          };
-                          print('Producto actualizado: $updatedProduct');
+                          context.read<ProductBloc>().add(
+                            CreateProductEvent(
+                              inventoryId: int.parse(
+                                selectedInventoryId ?? '0',
+                              ),
+                              name: nameController.text,
+                              barcode: barcodeController.text,
+                              price: priceController.text,
+                              quantity:
+                                  int.tryParse(quantityController.text) ?? 0,
+                            ),
+                          );
                         } else {
-                          print('Editar producto existente');
+                          context.read<ProductBloc>().add(
+                            UpdateProductEvent(
+                              id: int.tryParse(idController.text) ?? 0,
+                              inventoryId: int.parse(selectedInventoryId!),
+                              name: nameController.text,
+                              barcode: barcodeController.text,
+                              price: priceController.text,
+                              quantity:
+                                  int.tryParse(quantityController.text) ?? 0,
+                            ),
+                          );
                         }
                         Navigator.of(context).pop();
                       },

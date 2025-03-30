@@ -10,17 +10,16 @@ sealed class InventaryEvent extends Equatable {
 class GetInventaryListEvent extends InventaryEvent {}
 
 class CreateInventaryEvent extends InventaryEvent {
-  final String id;
   final String name;
 
-  const CreateInventaryEvent({required this.id, required this.name});
+  const CreateInventaryEvent({required this.name});
 
   @override
-  List<Object> get props => [id, name];
+  List<Object> get props => [name];
 }
 
 class UpdateInventaryEvent extends InventaryEvent {
-  final String id;
+  final int id;
   final String name;
   const UpdateInventaryEvent({required this.id, required this.name});
 

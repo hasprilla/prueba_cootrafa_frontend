@@ -28,7 +28,7 @@ class InventaryRepositoryImpl implements InventaryRepository {
   @override
   Future<Either<Failure, void>> create(CreateInventaryParams params) async {
     try {
-      final model = InventaryModel(id: params.id, name: params.name);
+      final model = InventaryModel(name: params.name);
       final response = remoteDataSource.createInventary(model);
       return Right(response);
     } on ServerException catch (e) {

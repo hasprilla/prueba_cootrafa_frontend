@@ -56,7 +56,11 @@ void showInventaryDialog({
                   decoration: InputDecoration(
                     labelText: 'ID',
                     border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.grey[200],
                   ),
+
+                  enabled: false,
                 ),
 
                 const SizedBox(height: 12),
@@ -94,15 +98,12 @@ void showInventaryDialog({
                           onPressed: () {
                             if (inventaryJson?['id'] == null) {
                               context.read<InventaryBloc>().add(
-                                CreateInventaryEvent(
-                                  id: idController.text,
-                                  name: nameController.text,
-                                ),
+                                CreateInventaryEvent(name: nameController.text),
                               );
                             } else {
                               context.read<InventaryBloc>().add(
                                 UpdateInventaryEvent(
-                                  id: idController.text,
+                                  id: int.parse(idController.text),
                                   name: nameController.text,
                                 ),
                               );
