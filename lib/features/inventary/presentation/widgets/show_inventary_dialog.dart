@@ -155,6 +155,7 @@ void showInventaryDialog({
                                   ),
                                 );
                               }
+
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(

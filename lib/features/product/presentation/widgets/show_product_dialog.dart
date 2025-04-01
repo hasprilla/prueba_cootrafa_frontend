@@ -72,7 +72,7 @@ void showProductDialog({
     return null;
   }
 
-  void submitForm() {
+  void submitForm(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       final productBloc = context.read<ProductBloc>();
       final event =
@@ -94,6 +94,7 @@ void showProductDialog({
               );
 
       productBloc.add(event);
+      Navigator.of(context).pop();
     }
   }
 
@@ -230,7 +231,9 @@ void showProductDialog({
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
-                        onPressed: submitForm,
+                        onPressed: () {
+                          submitForm(context);
+                        },
                         child: const Text('GUARDAR'),
                       ),
                     ],

@@ -24,6 +24,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         method: Method.get,
         url: ApiUrl.products,
       );
+
       return List<Map<String, dynamic>>.from(
         response['data'],
       ).map(ProductModel.fromJson).toList();
